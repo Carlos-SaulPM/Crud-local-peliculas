@@ -21,7 +21,7 @@ app.get("/agregar", (req, res) => {
 });
 
 //Ruta para agregar pelicula
-app.post("/pelicula/agregar", (req, res) => {
+app.post("/pelicula/crear", (req, res) => {
   let titulo = req.body.titulo;
   let fecha = req.body.fecha;
   let sinopsis = req.body.sinopsis;
@@ -66,6 +66,69 @@ app.get("/pelicula/eliminar/:id", (req, res) => {
   eliminarPeliculaPorId(id);
   res.redirect("/");
 })
+
+
+// RUTAS PARA PROBAR CON POSTMAN
+
+//Obtener peliculas
+app.get("/api/peliculas", (req, res) => {
+  if (peliculas.length <= 0)
+    return res.status(200).json({ mensaje: "Actualmente no hay películas" });
+  res.status(200).json({ peliculas });
+})
+
+//Obtener película por Id
+app.get("/api/pelicula/:id", (req, res) => {
+  
+  const id = req.params.id;
+
+  const pelicula = obtenerPeliculaPorId(id);
+  if (pelicula == null) return res.status(404).json({mensaje: "No existe esa pelicula por ese id"});
+
+  res.status(200).json({ pelicula });
+})
+
+//Editar pelicula por Id
+app.post("/api/pelicula/modificar/:id", (req, res) => {
+  const id = req.params.id;
+  const pelicula = obtenerPeliculaPorId(id);
+  if (pelicula == null)return res.status(404).json({ mensaje: "No existe esa pelicula con ese id" });
+  
+  pelicula.titulo = req.body.titulo;
+  pelicula.sinopsis = req.body.sinopsis;
+  pelicula.fecha = req.body.fecha;
+  pelicula.visto = req.body.visto
+
+  res.status(200).json({ pelicula });
+})
+
+app.post("/api/pelicula/crear", (req, res) => {
+  
+  let titulo = req.body.titulo;
+  let fecha = req.body.fecha;
+  let sinopsis = req.body.sinopsis;
+
+  const peliculaAAgregar = {
+    id: idPeliculas,
+    titulo,
+    fecha,
+    sinopsis,
+    visto: false,
+  };
+
+  peliculas.push(peliculaAAgregar);
+  idPeliculas++;
+
+  res.status(200).json({peliculaAAgregar});
+
+})
+
+app.get("/pelicula/eliminar/:id", (req, res) => {
+  let id = req.params.id;
+  eliminarPeliculaPorId(id);
+  res.status(200).json({peliculas});
+});
+
 
 
 //Funciones auxiliares
