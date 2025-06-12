@@ -1,21 +1,23 @@
 const express = require("express");
 const app = express();
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json()); //Para que pueda entender datos en formato JSON 
+app.use(express.urlencoded({ extended: true })); //Pueda entender formularios HTML clásicos
 
-app.set("view engine", "ejs");
+app.set("view engine", "ejs"); //Motor de plantillas EJS
 
-const peliculas = [];
+const peliculas = []; //Simular DB
 let idPeliculas = 1; //Simulando id incrementable
 
-//Muestra el index
+//VISTA
+//Vista del index
 app.get("/", (req, res) => {
   // console.log(peliculas);
-  res.render("index", { peliculas });
+  // console.log("____________");
+  res.render("index", { peliculas: peliculas });
 });
 
-//Muestra el formulario agregar pelicula
+//Vista del formulario agregar pelicula
 app.get("/agregar", (req, res) => {
   res.render("agregar");
 });
@@ -40,7 +42,7 @@ app.post("/pelicula/crear", (req, res) => {
   res.redirect("/");
 });
 
-//Muestra el formulario para editar la pelicula
+//Vista del formulario para editar la pelicula
 app.get("/pelicula/editar/:id", (req, res) => {
   let id = req.params.id;
   let pelicula = obtenerPeliculaPorId(id);
@@ -102,6 +104,7 @@ app.post("/api/pelicula/modificar/:id", (req, res) => {
   res.status(200).json({ pelicula });
 })
 
+//Crear pelicula
 app.post("/api/pelicula/crear", (req, res) => {
   
   let titulo = req.body.titulo;
@@ -123,6 +126,7 @@ app.post("/api/pelicula/crear", (req, res) => {
 
 })
 
+//Eliminar pelicula
 app.get("/pelicula/eliminar/:id", (req, res) => {
   let id = req.params.id;
   eliminarPeliculaPorId(id);
@@ -133,7 +137,7 @@ app.get("/pelicula/eliminar/:id", (req, res) => {
 
 //Funciones auxiliares
 function obtenerPeliculaPorId(id) {
-  return peliculas.find((pelicula) => pelicula.id === Number(id));
+  return peliculas.find((pelicula) => pelicula.id === Number(id)); //Regresa la pelicula con el id especificado
 }
 
 function editarPelicula(peliculaConCambios) {
