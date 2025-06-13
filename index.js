@@ -127,7 +127,7 @@ app.post("/api/pelicula/crear", (req, res) => {
 })
 
 //Eliminar pelicula
-app.get("/pelicula/eliminar/:id", (req, res) => {
+app.get("/api/pelicula/eliminar/:id", (req, res) => {
   let id = req.params.id;
   eliminarPeliculaPorId(id);
   res.status(200).json({peliculas});
